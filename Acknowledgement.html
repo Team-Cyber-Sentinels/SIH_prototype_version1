@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acknowledgement</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    body::before {
+      content: '';
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.03)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.03)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.02)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+      animation: float 20s linear infinite;
+      pointer-events: none;
+    }
+    
+    @keyframes float {
+      0% { transform: translate(-10%, -10%) rotate(0deg); }
+      100% { transform: translate(-10%, -10%) rotate(360deg); }
+    }
+    
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 20px 40px rgba(0,0,0,0.1), 0 0 0 1px rgba(255,255,255,0.1); }
+      50% { box-shadow: 0 25px 50px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.2); }
+    }
+    
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      padding: 50px 40px;
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1), 0 0 0 1px rgba(255,255,255,0.1);
+      text-align: center;
+      max-width: 520px;
+      width: 100%;
+      position: relative;
+      animation: slideUp 0.6s ease-out, glow 3s ease-in-out infinite;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 50%, #667eea 100%);
+      border-radius: 24px 24px 0 0;
+    }
+    
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 30px;
+      animation: pulse 2s ease-in-out infinite;
+      box-shadow: 0 10px 25px rgba(58, 123, 213, 0.3);
+    }
+    
+    .success-icon::before {
+      content: '✓';
+      color: white;
+      font-size: 40px;
+      font-weight: bold;
+    }
+    
+    .card h2 {
+      color: #2d3748;
+      margin-bottom: 15px;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    
+    .card p {
+      margin: 15px 0;
+      color: #64748b;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    
+    .card p.highlight {
+      color: #2d3748;
+      font-weight: 600;
+      font-size: 18px;
+    }
+    
+    .report-id {
+      font-weight: 700;
+      color: #1a365d;
+      background: linear-gradient(135deg, #e2e8f0 0%, #f7fafc 100%);
+      padding: 20px 25px;
+      border-radius: 16px;
+      display: inline-block;
+      font-size: 20px;
+      letter-spacing: 2px;
+      margin: 20px 0;
+      border: 2px solid #e2e8f0;
+      font-family: 'Monaco', 'Menlo', monospace;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+    }
+    
+    .report-id:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1), inset 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .btn {
+      margin-top: 30px;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    
+    .btn:hover::before {
+      left: 100%;
+    }
+    
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+    }
+    
+    .btn:active {
+      transform: translateY(-1px);
+    }
+    
+    .info-text {
+      margin-top: 25px;
+      padding: 20px;
+      background: rgba(59, 130, 246, 0.05);
+      border-radius: 12px;
+      border-left: 4px solid #3b82f6;
+    }
+    
+    .info-text p {
+      color: #3b82f6;
+      font-size: 14px;
+      margin: 0;
+      font-weight: 500;
+    }
+    
+    @media (max-width: 600px) {
+      .card {
+        padding: 40px 25px;
+        margin: 10px;
+      }
+      
+      .card h2 {
+        font-size: 24px;
+      }
+      
+      .report-id {
+        font-size: 16px;
+        padding: 15px 20px;
+        letter-spacing: 1px;
+      }
+      
+      .btn {
+        padding: 14px 28px;
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="success-icon"></div>
+    <h2>Report Submitted Successfully!</h2>
+    <p>Thank you for taking the time to submit your report.</p>
+    <p class="highlight">Your reference ID is:</p>
+    <div class="report-id" id="reportId">Loading...</div>
+    <div class="info-text">
+      <p>💡 Please save this reference ID for future correspondence and tracking purposes.</p>
+    </div>
+    <button class="btn" onclick="window.location.href='index.html'">
+      ← Go Back Home
+    </button>
+  </div>
+
+  <script>
+    // Grab the report ID from the URL query param
+    const params = new URLSearchParams(window.location.search);
+    const reportId = params.get("id");
+
+    document.getElementById("reportId").textContent = reportId || "Not Available";
+  </script>
+</body>
+</html>

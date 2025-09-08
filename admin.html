@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="icon" href="weblogo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body { 
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: #1f2937;
+      padding: 0;
+    }
+
+    .header {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 24px 0;
+      margin-bottom: 32px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    h1 { 
+      font-size: 32px;
+      font-weight: 800;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      letter-spacing: -0.02em;
+    }
+
+    .dashboard-stats {
+      display: flex;
+      gap: 24px;
+      color: white;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .main-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px 40px;
+    }
+
+    .search-filter {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 280px;
+      padding: 12px 20px;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      font-size: 16px;
+      transition: all 0.2s;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .filter-select {
+      padding: 12px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      font-size: 14px;
+      background: white;
+      min-width: 140px;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .filter-select:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    #reports-container { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); 
+      gap: 24px; 
+    }
+
+    .card { 
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 24px; 
+      padding: 28px; 
+      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .card:hover { 
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 32px 64px rgba(0,0,0,0.15);
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .user-info {
+      flex: 1;
+    }
+
+    .user-name { 
+      font-size: 20px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+
+    .user-email {
+      color: #6b7280;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .card-meta { 
+      display: flex;
+      gap: 16px;
+      margin: 16px 0;
+      flex-wrap: wrap;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #6b7280;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .meta-icon {
+      width: 16px;
+      height: 16px;
+      opacity: 0.7;
+    }
+
+    .description { 
+      color: #374151;
+      line-height: 1.6;
+      font-size: 15px;
+      margin: 16px 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .status-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #f3f4f6;
+    }
+
+    .status-badge { 
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px; 
+      border-radius: 20px; 
+      font-weight: 600; 
+      font-size: 13px; 
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .status-approved { 
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+    }
+
+    .status-inprogress { 
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white;
+    }
+
+    .status-resolved { 
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+      color: white;
+    }
+
+    .report-id {
+      background: #f3f4f6;
+      color: #6b7280;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .loading-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      color: white;
+      text-align: center;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255,255,255,0.3);
+      border-top: 4px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 16px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: white;
+    }
+
+    .empty-state h3 {
+      font-size: 24px;
+      margin-bottom: 8px;
+      opacity: 0.9;
+    }
+
+    .empty-state p {
+      opacity: 0.7;
+    }
+
+    @media (max-width: 768px) {
+      .main-container {
+        padding: 0 16px 40px;
+      }
+      
+      .search-filter {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .search-input {
+        min-width: auto;
+      }
+      
+      #reports-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .card {
+        padding: 20px;
+      }
+      
+      .card-meta {
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card {
+      animation: slideIn 0.5s ease-out forwards;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-content">
+      <h1>Admin Dashboard</h1>
+      <div class="dashboard-stats">
+        <span>Total Reports: <strong id="total-count">0</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-container">
+    <div class="search-filter">
+      <input type="text" class="search-input" placeholder="Search reports by name, email, or description..." id="search-input">
+      <select class="filter-select" id="status-filter">
+        <option value="">All Status</option>
+        <option value="Approved">Approved</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Resolved">Resolved</option>
+      </select>
+      <select class="filter-select" id="category-filter">
+        <option value="">All Categories</option>
+      </select>
+    </div>
+
+    <div id="reports-container">
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <h3>Loading Reports</h3>
+        <p>Please wait while we fetch the latest data...</p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    // Correct Supabase credentials
+    const supabaseUrl = "https://tpcpjxiafgptviandelc.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwY3BqeGlhZmdwdHZpYW5kZWxjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcxNjk4NDcsImV4cCI6MjA3Mjc0NTg0N30.TYcP-D68eufxqnNgjsdMpkt0xoekP-whJZ9mkDgLAdM";
+
+    // Initialize Supabase client
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    let allReports = [];
+    let filteredReports = [];
+
+    async function fetchReports() {
+      const { data: reports, error } = await supabase
+        .from("reports")
+        .select("id, name, email, location, description, status, category")
+        .order("id", { ascending: false });
+
+      const container = document.getElementById("reports-container");
+
+      if (error) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <h3>Error Loading Reports</h3>
+            <p>${error.message}</p>
+          </div>
+        `;
+        console.error(error);
+        return;
+      }
+
+      allReports = reports || [];
+      filteredReports = allReports;
+      
+      // Update total count
+      document.getElementById("total-count").textContent = allReports.length;
+      
+      // Populate category filter
+      populateCategoryFilter();
+      
+      // Display reports
+      displayReports(filteredReports);
+
+      console.log("Reports loaded:", reports);
+    }
+
+    function populateCategoryFilter() {
+      const categoryFilter = document.getElementById("category-filter");
+      const categories = [...new Set(allReports.map(report => report.category).filter(Boolean))];
+      
+      categoryFilter.innerHTML = '<option value="">All Categories</option>';
+      categories.forEach(category => {
+        categoryFilter.innerHTML += `<option value="${category}">${category}</option>`;
+      });
+    }
+
+    function displayReports(reports) {
+      const container = document.getElementById("reports-container");
+
+      if (!reports || !reports.length) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <h3>No Reports Found</h3>
+            <p>Try adjusting your search or filter criteria.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = "";
+
+      reports.forEach((report, index) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.style.animationDelay = `${index * 0.1}s`;
+
+        let statusClass = "status-approved";
+        let statusText = "Approved";
+        
+        if (report.status === "In Progress") {
+          statusClass = "status-inprogress";
+          statusText = "In Progress";
+        }
+        if (report.status === "Resolved") {
+          statusClass = "status-resolved";
+          statusText = "Resolved";
+        }
+
+        card.innerHTML = `
+          <div class="card-header">
+            <div class="user-info">
+              <div class="user-name">${report.name}</div>
+              <div class="user-email">${report.email}</div>
+            </div>
+            <div class="report-id">#${report.id}</div>
+          </div>
+          
+          <div class="card-meta">
+            <div class="meta-item">
+              <svg class="meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+              ${report.location}
+            </div>
+            ${report.category ? `
+              <div class="meta-item">
+                <svg class="meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                </svg>
+                ${report.category}
+              </div>
+            ` : ''}
+          </div>
+          
+          <div class="description">${report.description}</div>
+          
+          <div class="status-container">
+            <span class="status-badge ${statusClass}">
+              <svg width="12" height="12" fill="currentColor" viewBox="0 0 12 12">
+                <circle cx="6" cy="6" r="6"/>
+              </svg>
+              ${statusText}
+            </span>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function filterReports() {
+      const searchTerm = document.getElementById("search-input").value.toLowerCase();
+      const statusFilter = document.getElementById("status-filter").value;
+      const categoryFilter = document.getElementById("category-filter").value;
+
+      filteredReports = allReports.filter(report => {
+        const matchesSearch = !searchTerm || 
+          report.name.toLowerCase().includes(searchTerm) ||
+          report.email.toLowerCase().includes(searchTerm) ||
+          report.description.toLowerCase().includes(searchTerm);
+
+        const matchesStatus = !statusFilter || 
+          (statusFilter === "Under Investigation" && report.status === "Pending") ||
+          report.status === statusFilter;
+
+        const matchesCategory = !categoryFilter || report.category === categoryFilter;
+
+        return matchesSearch && matchesStatus && matchesCategory;
+      });
+
+      displayReports(filteredReports);
+    }
+
+    // Event listeners
+    document.getElementById("search-input").addEventListener("input", filterReports);
+    document.getElementById("status-filter").addEventListener("change", filterReports);
+    document.getElementById("category-filter").addEventListener("change", filterReports);
+
+    // Initial load
+    fetchReports();
+  </script>
+
+
+  <footer class="site-footer">
+  <div class="footer-container">
+    <!-- Logo / Branding -->
+    <div class="footer-brand">
+      <img src="logo.png" alt="Civic Connect Logo" style="width: 120px; margin-bottom: 10px;">
+      <h2>Civic Connect</h2>
+      <p>Empowering citizens and municipalities for a smarter future.</p>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="footer-links">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Features</a></li>
+        <li><a href="#">How It Works</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+
+    <!-- Social Links -->
+    <div class="footer-social">
+      <h4>Follow Us</h4>
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom -->
+  <div class="footer-bottom">
+    <p>Made with ❤ by Team Cyber Sentinels</p>
+  </div>
+</footer>
+
+<style>
+    .site-footer {
+  background: #0b0f19;
+  color: #ddd;
+  padding: 60px 20px 20px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: auto;
+  gap: 40px;
+}
+
+.footer-brand h2 {
+  color: #fff;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.footer-brand p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.footer-links h4,
+.footer-social h4 {
+  color: #fff;
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.footer-links ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links ul li {
+  margin-bottom: 8px;
+}
+
+.footer-links ul li a {
+  color: #ddd;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: color 0.3s;
+}
+
+.footer-links ul li a:hover {
+  color: #ff7f32;
+}
+
+.footer-social .social-icons a {
+  display: inline-block;
+  color: #ddd;
+  font-size: 1.2rem;
+  margin-right: 12px;
+  transition: color 0.3s;
+}
+
+.footer-social .social-icons a:hover {
+  color: #ff7f32;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-bottom p {
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+.footer-bottom p span {
+  color: #ff4d6d;
+  font-weight: bold;
+}
+
+</style>
+
+</body>
+</html>
