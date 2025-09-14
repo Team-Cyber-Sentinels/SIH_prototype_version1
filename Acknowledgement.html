@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="weblogo.png">
+  <title>Acknowledgement</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+      position: relative;
+      /* Removed overflow: hidden to allow scrolling */
+    }
+    
+    /* Enhanced animated background */
+    body::before {
+      content: '';
+      position: fixed;
+      width: 200%;
+      height: 200%;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.03)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.04)"/><circle cx="10" cy="60" r="0.8" fill="rgba(255,255,255,0.02)"/><circle cx="90" cy="40" r="1.2" fill="rgba(255,255,255,0.03)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+      animation: float 25s linear infinite;
+      pointer-events: none;
+      opacity: 0.6;
+      z-index: -2;
+    }
+    
+    /* Floating orbs */
+    body::after {
+      content: '';
+      position: fixed;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      border-radius: 50%;
+      top: -150px;
+      right: -150px;
+      animation: orbit 30s linear infinite;
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    @keyframes float {
+      0% { transform: translate(-10%, -10%) rotate(0deg); }
+      100% { transform: translate(-10%, -10%) rotate(360deg); }
+    }
+    
+    @keyframes orbit {
+      0% { transform: rotate(0deg) translateX(200px) rotate(0deg); }
+      100% { transform: rotate(360deg) translateX(200px) rotate(-360deg); }
+    }
+    
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+    
+    @keyframes glow {
+      0%, 100% { 
+        box-shadow: 0 25px 50px rgba(0,0,0,0.12), 
+                    0 0 0 1px rgba(255,255,255,0.15),
+                    0 0 40px rgba(102, 126, 234, 0.1); 
+      }
+      50% { 
+        box-shadow: 0 35px 70px rgba(0,0,0,0.18), 
+                    0 0 0 1px rgba(255,255,255,0.25),
+                    0 0 60px rgba(102, 126, 234, 0.2); 
+      }
+    }
+    
+    @keyframes checkmark {
+      0% {
+        stroke-dashoffset: 100;
+        opacity: 0;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+      }
+    }
+    
+    .card {
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(25px);
+      padding: 60px 50px;
+      border-radius: 28px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.12), 
+                  0 0 0 1px rgba(255,255,255,0.15),
+                  0 0 40px rgba(102, 126, 234, 0.1);
+      text-align: center;
+      max-width: 580px;
+      width: 100%;
+      position: relative;
+      animation: slideUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), glow 4s ease-in-out infinite;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      margin: auto;
+    }
+    
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 25%, #667eea 50%, #764ba2 75%, #f093fb 100%);
+      border-radius: 28px 28px 0 0;
+    }
+    
+    /* Decorative corner elements */
+    .card::after {
+      content: '';
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(255, 255, 255, 0.1));
+      border-radius: 50%;
+      opacity: 0.5;
+    }
+    
+    .success-icon {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 50%, #667eea 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 35px;
+      animation: pulse 2.5s ease-in-out infinite;
+      box-shadow: 0 15px 35px rgba(58, 123, 213, 0.4),
+                  0 0 0 8px rgba(58, 123, 213, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .success-icon::before {
+      content: '';
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(255,255,255,0.3), transparent);
+    }
+    
+    .checkmark {
+      position: relative;
+      z-index: 2;
+    }
+    
+    .checkmark svg {
+      width: 50px;
+      height: 50px;
+    }
+    
+    .checkmark path {
+      stroke: white;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+      animation: checkmark 1.5s ease-in-out 0.5s forwards;
+    }
+    
+    .card h2 {
+      color: #1a202c;
+      margin-bottom: 20px;
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.8px;
+      background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .card p {
+      margin: 18px 0;
+      color: #64748b;
+      font-size: 17px;
+      line-height: 1.7;
+      font-weight: 400;
+    }
+    
+    .card p.highlight {
+      color: #2d3748;
+      font-weight: 600;
+      font-size: 20px;
+      margin-top: 25px;
+    }
+    
+    .report-id {
+      font-weight: 700;
+      color: #1a365d;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      padding: 25px 30px;
+      border-radius: 20px;
+      display: inline-block;
+      font-size: 22px;
+      letter-spacing: 3px;
+      margin: 25px 0;
+      border: 2px solid #e2e8f0;
+      font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.08),
+                  0 4px 20px rgba(0,0,0,0.05);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .report-id::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(58, 123, 213, 0.1), transparent);
+      transition: left 0.8s ease;
+    }
+    
+    .report-id:hover::before {
+      left: 100%;
+    }
+    
+    .report-id:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.15), 
+                  inset 0 2px 8px rgba(0,0,0,0.08);
+      border-color: #3a7bd5;
+    }
+    
+    .btn {
+      margin-top: 35px;
+      padding: 18px 36px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      font-size: 17px;
+      font-weight: 600;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+      display: inline-block;
+    }
+    
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.6s ease;
+    }
+    
+    .btn:hover::before {
+      left: 100%;
+    }
+    
+    .btn:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 20px 50px rgba(102, 126, 234, 0.5);
+    }
+    
+    .btn:active {
+      transform: translateY(-2px) scale(1.02);
+    }
+    
+    .info-text {
+      margin-top: 30px;
+      padding: 25px;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(147, 197, 253, 0.05) 100%);
+      border-radius: 16px;
+      border-left: 5px solid #3b82f6;
+      backdrop-filter: blur(10px);
+      position: relative;
+    }
+    
+    .info-text::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+      border-radius: 16px;
+      pointer-events: none;
+    }
+    
+    .info-text p {
+      color: #2563eb;
+      font-size: 15px;
+      margin: 0;
+      font-weight: 500;
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Particle effect */
+    .particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      overflow: hidden;
+      border-radius: 28px;
+    }
+    
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+      border-radius: 50%;
+      animation: particleFloat 8s linear infinite;
+      opacity: 0;
+    }
+    
+    .particle:nth-child(1) { left: 10%; animation-delay: 0s; }
+    .particle:nth-child(2) { left: 20%; animation-delay: 1s; }
+    .particle:nth-child(3) { left: 30%; animation-delay: 2s; }
+    .particle:nth-child(4) { left: 40%; animation-delay: 3s; }
+    .particle:nth-child(5) { left: 50%; animation-delay: 4s; }
+    .particle:nth-child(6) { left: 60%; animation-delay: 5s; }
+    .particle:nth-child(7) { left: 70%; animation-delay: 6s; }
+    .particle:nth-child(8) { left: 80%; animation-delay: 7s; }
+    
+    @keyframes particleFloat {
+      0% {
+        transform: translateY(100px);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100px);
+        opacity: 0;
+      }
+    }
+    
+    @media (max-width: 600px) {
+      body {
+        padding: 20px 15px;
+      }
+      
+      .card {
+        padding: 45px 30px;
+        margin: 15px auto;
+        border-radius: 24px;
+      }
+      
+      .card h2 {
+        font-size: 26px;
+      }
+      
+      .success-icon {
+        width: 80px;
+        height: 80px;
+      }
+      
+      .checkmark svg {
+        width: 40px;
+        height: 40px;
+      }
+      
+      .report-id {
+        font-size: 18px;
+        padding: 20px 25px;
+        letter-spacing: 2px;
+      }
+      
+      .btn {
+        padding: 16px 32px;
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    
+    <div class="success-icon">
+      <div class="checkmark">
+        <svg viewBox="0 0 52 52">
+          <path d="M14 27l8 8L38 19"/>
+        </svg>
+      </div>
+    </div>
+    
+    <h2>Report Submitted Successfully!</h2>
+    <p>Thank you for taking the time to submit your report.</p>
+    <p class="highlight">Your reference ID is:</p>
+    <div class="report-id" id="reportId">Loading...</div>
+    <div class="info-text">
+      <p>💡 Please save this reference ID for future correspondence and tracking purposes.</p>
+    </div>
+    <button class="btn" onclick="window.location.href='index.html'">
+      ← Go Back Home
+    </button>
+  </div>
+
+  <script>
+    // Grab the report ID from the URL query param
+    const params = new URLSearchParams(window.location.search);
+    const reportId = params.get("id");
+
+    document.getElementById("reportId").textContent = reportId || "Not Available";
+  </script>
+</body>
+</html>
