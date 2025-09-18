@@ -3,3 +3,7 @@ uvicorn
 numpy
 pillow
 tensorflow
+fastapi
+uvicorn
+python-multipart
+
