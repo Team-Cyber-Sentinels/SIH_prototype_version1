@@ -31,7 +31,7 @@ def read_index():
 # Load the trained model
 try:
     MODEL = tf.keras.models.load_model(
-    r"C:\Users\piyus\Web Development Projects\SIH Prototype AI Integrated\hackathon_ai_model_version8.keras"
+    r"hackathon_ai_model_version8.keras"
 )
 
     print("Model loaded successfully!")
@@ -163,3 +163,4 @@ if __name__ == "__main__":
 #     confidence = float(np.max(predictions[0]))
 
 #     return {"class": predicted_class, "confidence": confidence}
+
