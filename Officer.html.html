@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .status-badge {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 500;
+        }
+        .status-pending {
+            background-color: #fef3c7; /* yellow-100 */
+            color: #d97706; /* yellow-700 */
+        }
+        .status-in-progress {
+            background-color: #dbeafe; /* blue-100 */
+            color: #1d4ed8; /* blue-700 */
+        }
+        .status-completed {
+            background-color: #d1fae5; /* green-100 */
+            color: #065f46; /* green-700 */
+        }
+        .status-rejected {
+            background-color: #fee2e2; /* red-100 */
+            color: #991b1b; /* red-700 */
+        }
+        .info-grid {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        .info-item strong {
+            font-weight: 600;
+            color: #4b5563; /* gray-600 */
+        }
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        /* Custom styles for improved card look */
+        .report-card {
+            border: none;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .report-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        /* Style for attached images */
+        .attached-images img {
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+        }
+        .attached-images img:hover {
+            transform: scale(1.05);
+            outline: 2px solid #3b82f6; /* blue-500 */
+            outline-offset: 2px;
+        }
+        .map-container {
+            width: 100%;
+            height: 300px;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div class="bg-gradient-to-r from-blue-500 to-orange-600 py-10 shadow-lg">
+        <div class="container mx-auto px-4 text-center flex justify-between items-center">
+            <a href="#" class="inline-flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-2 text-base font-medium text-purple-600 shadow-sm hover:bg-gray-100 transition-colors">
+                Back to Home
+            </a>
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-white leading-tight">Reports Dashboard</h1>
+            <div class="w-40 h-10"></div> <!-- Placeholder to balance the layout -->
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <div class="mb-6">
+            <label for="category-filter" class="block text-sm font-medium text-gray-700">Filter by Category</label>
+            <select id="category-filter" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md shadow-sm">
+                <option value="all">All Categories</option>
+            </select>
+        </div>
+        <div id="report-container" class="space-y-6">
+            <div class="text-center py-12 text-gray-500" id="loading-message">
+                <svg class="animate-spin h-8 w-8 text-blue-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <p class="mt-2 text-lg">Loading reports...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Supabase with your credentials
+        const supabaseUrl = "https://tpcpjxiafgptviandelc.supabase.co";
+        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwY3BqeGlhZmdwdHZpYW5kZWxjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcxNjk4NDcsImV4cCI6MjA3Mjc0NTg0N30.TYcP-D68eufxqnNgjsdMpkt0xoekP-whJZ9mkDgLAdM";
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+        let allReportsData = [];
+
+        // Helper function to get status badge HTML
+        function getStatusBadge(status) {
+            const statusMap = {
+                "Pending": "Work Under Process",
+                "In Progress": "In Progress",
+                "Completed": "Completed",
+                "Rejected": "Rejected"
+            };
+
+            const classMap = {
+                "Pending": "pending",
+                "In Progress": "in-progress",
+                "Completed": "completed",
+                "Rejected": "rejected"
+            };
+
+            const displayStatus = statusMap[status] || status;
+            const statusClass = classMap[status] || status.toLowerCase().replace(/\s+/g, '-');
+
+            return `<span class="status-badge status-${statusClass}">${displayStatus}</span>`;
+        }
+
+        // Renders the reports to the UI based on the provided array
+        async function renderReports(reportsToRender) {
+            const reportContainer = document.getElementById('report-container');
+            reportContainer.innerHTML = '';
+
+            if (!reportsToRender || reportsToRender.length === 0) {
+                reportContainer.innerHTML = '<p class="text-center text-gray-500">No reports found for this category.</p>';
+                return;
+            }
+
+            for (const report of reportsToRender) {
+                const { data: imagesData, error: imagesError } = await supabaseClient
+                    .from('report_images')
+                    .select('image_url')
+                    .eq('report_id', report.id);
+
+                if (imagesError) console.error('Failed to fetch images for report:', report.id, imagesError);
+
+                let imagesHtml = '';
+                if (imagesData && imagesData.length > 0) {
+                    imagesHtml = `<div class="info-item full-width mt-4">
+                                    <p class="font-bold text-gray-700 mb-2">Attached Images:</p>
+                                    <div class="flex flex-wrap gap-2 attached-images">`;
+                    imagesData.forEach(img => {
+                        imagesHtml += `<img src="${img.image_url}" alt="Report Image" class="w-40 h-40 object-cover rounded-lg shadow-md transition-all duration-200">`;
+                    });
+                    imagesHtml += `</div></div>`;
+                }
+                
+                const { data: locationData, error: locationError } = await supabaseClient
+                    .from('report_locations')
+                    .select('latitude, longitude')
+                    .eq('report_id', report.id)
+                    .single();
+
+                if (locationError) console.error('Failed to fetch location for report:', report.id, locationError);
+                
+                const mapHtml = (locationData && locationData.latitude && locationData.longitude)
+                    ? `<div class="full-width mt-4">
+                            <p class="font-bold text-gray-700 mb-2">Location Map:</p>
+                            <div class="map-container">
+                                <iframe
+                                    width="100%"
+                                    height="100%"
+                                    frameborder="0" style="border:0"
+                                    src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBPsuaow_h6RYW6j4Nvl9BXroIiRLq1JtM&q=${locationData.latitude},${locationData.longitude}" allowfullscreen>
+                                </iframe>
+                            </div>
+                       </div>`
+                    : '';
+
+                const reportBlock = document.createElement('div');
+                reportBlock.className = 'report-card bg-white p-6 rounded-xl transition-all duration-300';
+                reportBlock.innerHTML = `
+                    <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-200">
+                        <h2 class="text-xl font-semibold text-gray-800">Report #${report.id}</h2>
+                        ${getStatusBadge(report.status)}
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <strong>Name:</strong>
+                            <span>${report.name}</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Email:</strong>
+                            <span>${report.email}</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Location:</strong>
+                            <span>${report.location}</span>
+                        </div>
+                        ${mapHtml}
+                        <div class="info-item">
+                            <strong>Category:</strong>
+                            <span>${report.category}</span>
+                        </div>
+                        <div class="info-item full-width">
+                            <strong>Description:</strong>
+                            <span>${report.description}</span>
+                        </div>
+                    </div>
+                    ${imagesHtml}
+                `;
+                reportContainer.appendChild(reportBlock);
+            }
+        }
+
+        // Fetch and display all reports on initial load
+        async function fetchAndDisplayAllReports() {
+            const loadingMessage = document.getElementById('loading-message');
+            
+            try {
+                const { data, error } = await supabaseClient
+                    .from('reports')
+                    .select('id, name, email, location, description, status, category');
+
+                loadingMessage.style.display = 'none';
+
+                if (error) throw error;
+                allReportsData = data || [];
+
+                // Populate category filter
+                const categories = ['all', ...new Set(allReportsData.map(report => report.category))];
+                const filterSelect = document.getElementById('category-filter');
+                filterSelect.innerHTML = categories.map(cat => 
+                    `<option value="${cat}">${cat.charAt(0).toUpperCase() + cat.slice(1)}</option>`
+                ).join('');
+
+                renderReports(allReportsData);
+
+            } catch (err) {
+                console.error('Error fetching reports:', err);
+                loadingMessage.innerHTML = `<p class="text-center text-red-500">Error loading reports. Please check your Supabase configuration and permissions. Error: ${err.message}</p>`;
+                loadingMessage.style.display = 'block';
+            }
+        }
+
+        // Add event listener for the category filter
+        document.getElementById('category-filter').addEventListener('change', (event) => {
+            const selectedCategory = event.target.value;
+            if (selectedCategory === 'all') {
+                renderReports(allReportsData);
+            } else {
+                const filteredReports = allReportsData.filter(report => report.category === selectedCategory);
+                renderReports(filteredReports);
+            }
+        });
+
+        // Run the function on page load
+        document.addEventListener('DOMContentLoaded', fetchAndDisplayAllReports);
+    </script>
+</body>
+</html>
